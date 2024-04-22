@@ -1,0 +1,47 @@
+#include <stdio.h>
+
+// Função para calcular a média das notas
+float calcular_media(float nota1, float nota2) {
+    return (nota1 + nota2) / 2;
+}
+
+// Função para calcular a situação do aluno
+char* calcular_situacao(float media) {
+    if (media >= 7) {
+        return "Aprovado";
+    } else {
+        return "Reprovado";
+    }
+}
+
+int main() {
+    FILE *arquivo_entrada = fopen("C:/Users/adeni/Downloads/DadosEntrada.csv", "r");
+    FILE *arquivo_saida = fopen("SituacaoFinal.csv", "w");
+
+    if (arquivo_entrada == NULL || arquivo_saida == NULL) {
+        printf("Erro ao abrir o arquivo.");
+        return 1;
+    }
+
+    // Pular a primeira linha
+    char linha[1000];
+    fgets(linha, sizeof(linha), arquivo_entrada);
+
+    fprintf(arquivo_saida, "Nome,Telefone,Curso,Nota Final,Situacao\n");
+
+    char nome[100], telefone[100], curso[100];
+    float nota1, nota2;
+
+    while (fscanf(arquivo_entrada, "%[^,],%[^,],%[^,],%f,%f\n", nome, telefone, curso, &nota1, &nota2) != EOF) {
+        float media = calcular_media(nota1, nota2);
+        char *situacao = calcular_situacao(media);
+        fprintf(arquivo_saida, "%s,%s,%s,%.1f,%s\n", nome, telefone, curso, media, situacao);
+    }
+
+    fclose(arquivo_entrada);
+    fclose(arquivo_saida);
+
+    printf("Arquivo 'resultado.csv' criado com sucesso.\n");
+
+    return 0;
+}
